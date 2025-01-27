@@ -7,6 +7,25 @@ interface IUniswapV2Pair {
     function balanceOf(address account) external view returns (uint256);
 }
 
+interface IUniswapV3Pool {
+    function slot0()
+    external
+    view
+    returns (
+        uint160 sqrtPriceX96,
+        int24 tick,
+        uint16 observationIndex,
+        uint16 observationCardinality,
+        uint16 observationCardinalityNext,
+        uint8 feeProtocol,
+        bool unlocked
+    );
+}
+
+interface IUniswapV3Factory {
+    function getPool(address token0, address token1, uint24 fee) external view returns (address);
+}
+
 interface INonfungiblePositionManager {
     struct Position {
         uint96 nonce;
@@ -31,10 +50,12 @@ interface IERC721 {
 }
 
 contract LiquidityFetcher {
-    address public uniswapV3PositionManager; // Address of the Uniswap V3 NFT Position Manager
+    address public immutable uniswapV3PositionManager;
+    address public immutable uniswapV3Factory;
 
-    constructor(address _uniswapV3PositionManager) {
+    constructor(address _uniswapV3PositionManager,address _uniswapV3Factory) {
         uniswapV3PositionManager = _uniswapV3PositionManager;
+        uniswapV3Factory = _uniswapV3Factory;
     }
 
     // Fetch position details for Uniswap V2
@@ -95,6 +116,25 @@ contract LiquidityFetcher {
     function ownerOf(uint256 tokenId) external view returns (address) {
         // Use the ERC721 ownerOf function to fetch the token owner
         return IERC721(uniswapV3PositionManager).ownerOf(tokenId);
+    }
+
+    function getPoolAddressForUniswapV3(
+        address token0,
+        address token1,
+        uint24 fee
+    ) public view returns (address poolAddress) {
+        // Get the pool address directly from the Uniswap V3 factory
+        poolAddress = IUniswapV3Factory(uniswapV3Factory).getPool(token0, token1, fee);
+        require(poolAddress != address(0), "Pool does not exist");
+    }
+
+    function getCurrentTick(
+        address token0,
+        address token1,
+        uint24 fee
+    ) external view returns (int24 currentTick) {
+        address poolAddress = getPoolAddressForUniswapV3(token0, token1, fee);
+        (, currentTick, , , , , ) = IUniswapV3Pool(poolAddress).slot0();
     }
 
     //  // Uniswap V2: Calculate impermanent loss based on price ratio

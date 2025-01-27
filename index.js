@@ -3,7 +3,7 @@ const {Web3} = require('web3');
 const web3 = new Web3('https://sepolia.infura.io/v3/c9dbee06f9f4413cb35b85ef7178789f');
 
 const contractABI = require("./uniswap.contract.abi.json")
-const contractAddress = '0x571a1a472a0a7d2d61602a316f2657fad6d130d2';
+const contractAddress = '0x2c13ef1683f8c8488ccd9f697c4f511b28a47f2a';
 
 
 const blockNumber = 7583716;
