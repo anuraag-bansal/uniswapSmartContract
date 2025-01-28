@@ -18,30 +18,25 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "token0",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "initialPrice",
+        "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "token1",
-        "type": "address"
-      },
-      {
-        "internalType": "uint24",
-        "name": "fee",
-        "type": "uint24"
+        "internalType": "uint256",
+        "name": "currentPrice",
+        "type": "uint256"
       }
     ],
-    "name": "getCurrentTick",
+    "name": "calculateImpermanentLoss",
     "outputs": [
       {
-        "internalType": "int24",
-        "name": "currentTick",
-        "type": "int24"
+        "internalType": "int256",
+        "name": "impermanentLoss",
+        "type": "int256"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -151,25 +146,16 @@
         "internalType": "uint128",
         "name": "tokensOwed1",
         "type": "uint128"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "ownerOf",
-    "outputs": [
+      },
       {
         "internalType": "address",
-        "name": "",
+        "name": "owner",
         "type": "address"
+      },
+      {
+        "internalType": "int24",
+        "name": "currentTick",
+        "type": "int24"
       }
     ],
     "stateMutability": "view",

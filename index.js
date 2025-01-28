@@ -2,9 +2,8 @@ const {Web3} = require('web3');
 const _ = require('lodash');
 const web3 = new Web3('https://sepolia.infura.io/v3/c9dbee06f9f4413cb35b85ef7178789f');
 
-const contractABI = require("./uniswap.contract.abi.json")
-const contractAddress = '0x2c13ef1683f8c8488ccd9f697c4f511b28a47f2a';
-
+const contractABI = require("./abis/uniswap.contract.abi.json")
+const contractAddress = '0xFf7DF91e15112516eCAB0EB65cB3BB5C89f327ce';
 
 const blockNumber = 7583716;
 
@@ -41,9 +40,8 @@ async function getPositionForUniswapV3(tokenId) {
                 tokenId: tokenId, amt0: 0, amt1: 0
             }
         }
-        const owner = await contract.methods.ownerOf(tokenId).call();
 
-        const tick = Number(await contract.methods.getCurrentTick(positions.token0, positions.token1, positions.fee).call());
+        const tick = Number(positions.currentTick)
         const liquidity = Number(positions.liquidity)
         const lowerTick = Number(positions.tickLower)
         const upperTick = Number(positions.tickUpper)
@@ -71,10 +69,10 @@ async function getPositionForUniswapV3(tokenId) {
         if (amt1 === undefined) {
             amt1 = 0
         }
-        console.log('Position:', tokenId, amt0, amt1, owner);
+        console.log('Position:', tokenId, amt0, amt1, positions.owner);
 
         return {
-            tokenId: tokenId, amt0: amt0, amt1: amt1, owner: owner
+            tokenId: tokenId, amt0: amt0, amt1: amt1, owner: positions.owner
         }
 
 
