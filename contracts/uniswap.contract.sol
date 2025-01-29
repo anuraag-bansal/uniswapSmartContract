@@ -146,7 +146,7 @@ contract LiquidityFetcher {
         uint256 priceRatio = (currentPrice * 1e18) / initialPrice; // Scale by 1e18 for precision
 
         // Calculate sqrt(r)
-        uint256 sqrtPriceRatio = sqrt(priceRatio) * 1e9;
+        uint256 sqrtPriceRatio = sqrt(priceRatio) * 1e9; //To maintain precision
 
         // Impermanent loss formula: IL = 1 - (2 * sqrt(r) / (1 + r))
         uint256 numerator = 2 * sqrtPriceRatio;
